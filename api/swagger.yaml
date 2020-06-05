@@ -1,0 +1,625 @@
+---
+swagger: "2.0"
+info:
+  description: "BFF de Mi Pago"
+  version: "1.0-beta"
+  title: "BFF Mi Pago"
+  contact:
+    name: "Eduardo Villagrán Morales"
+    email: "evillagran@bancochile.cl"
+host: "localhost:8080"
+basePath: "/"
+tags:
+- name: "perfil-controller"
+  description: "Perfil Controller"
+- name: "productos-controller"
+  description: "Productos Controller"
+- name: "public-push-controller"
+  description: "Public Push Controller"
+- name: "push-controller"
+  description: "Push Controller"
+paths:
+  /public/v1/utilidades/notificaciones/push/{token_push}:
+    delete:
+      tags:
+      - "public-push-controller"
+      summary: "Desuscripción a push de mi pago"
+      operationId: "desuscribirUsingDELETE"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "idApp"
+        in: "header"
+        description: "Información de la APP, Formato: app_id|app_version|osiris_version"
+        required: true
+        type: "string"
+        x-exportParamName: "IdApp"
+      - name: "sucursal"
+        in: "header"
+        description: "Código de sucursal"
+        required: false
+        type: "string"
+        x-exportParamName: "Sucursal"
+        x-optionalDataType: "String"
+      - name: "token_push"
+        in: "path"
+        description: "token FCM"
+        required: true
+        type: "string"
+        x-exportParamName: "TokenPush"
+      responses:
+        "200":
+          description: "OK"
+        "201":
+          description: "suscripción eliminada exitosamente"
+        "400":
+          description: "Solicitud incorrecta"
+        "401":
+          description: "No autorizado"
+        "500":
+          description: "Error general"
+        "503":
+          description: "Servicio no disponible"
+      deprecated: false
+  /v1/clientes/persona/perfil/:
+    get:
+      tags:
+      - "perfil-controller"
+      summary: "Obtención del perfil de un cliente"
+      operationId: "obtenerPerfilUsingGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Token JWT"
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "idApp"
+        in: "header"
+        description: "Información de la APP, Formato: app_id|app_version|osiris_version"
+        required: true
+        type: "string"
+        x-exportParamName: "IdApp"
+      - name: "sucursal"
+        in: "header"
+        description: "Código de sucursal"
+        required: false
+        type: "string"
+        x-exportParamName: "Sucursal"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "Perfil encontrado"
+          schema:
+            $ref: "#/definitions/PerfilTO"
+        "204":
+          description: "Sin perfil"
+          schema:
+            $ref: "#/definitions/PerfilTO"
+        "400":
+          description: "Solicitud incorrecta"
+        "401":
+          description: "No autorizado"
+        "500":
+          description: "Error general"
+        "503":
+          description: "Servicio no disponible"
+      deprecated: false
+    post:
+      tags:
+      - "perfil-controller"
+      summary: "Creación o actualización del perfil de usuario"
+      operationId: "actualizaPerfilUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Token JWT"
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "idApp"
+        in: "header"
+        description: "Información de la APP, Formato: app_id|app_version|osiris_version"
+        required: true
+        type: "string"
+        x-exportParamName: "IdApp"
+      - in: "body"
+        name: "perfil"
+        description: "perfil"
+        required: true
+        schema:
+          $ref: "#/definitions/PerfilTO"
+        x-exportParamName: "Perfil"
+      - name: "sucursal"
+        in: "header"
+        description: "Código de sucursal"
+        required: false
+        type: "string"
+        x-exportParamName: "Sucursal"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "OK"
+        "201":
+          description: "Perfil creado o actualizado"
+        "400":
+          description: "Solicitud incorrecta"
+        "401":
+          description: "No autorizado"
+        "403":
+          description: "No permitido"
+        "500":
+          description: "Error general"
+        "503":
+          description: "Servicio no disponible"
+      deprecated: false
+  /v1/clientes/persona/perfil/avatar:
+    post:
+      tags:
+      - "perfil-controller"
+      summary: "Creación o actualización del avatar de cliente"
+      operationId: "actualizarAvatarUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Token JWT"
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - in: "body"
+        name: "avatar"
+        description: "avatar"
+        required: true
+        schema:
+          $ref: "#/definitions/AvatarTO"
+        x-exportParamName: "Avatar"
+      - name: "idApp"
+        in: "header"
+        description: "Información de la APP, Formato: app_id|app_version|osiris_version"
+        required: true
+        type: "string"
+        x-exportParamName: "IdApp"
+      - name: "sucursal"
+        in: "header"
+        description: "Código de sucursal"
+        required: false
+        type: "string"
+        x-exportParamName: "Sucursal"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "OK"
+        "201":
+          description: "Avatar creado/actualizado"
+        "400":
+          description: "Solicitud incorrecta"
+        "401":
+          description: "No autorizado"
+        "403":
+          description: "No permitido"
+        "500":
+          description: "Error general"
+        "503":
+          description: "Servicio no disponible"
+      deprecated: false
+  /v1/clientes/persona/perfil/avatar/{rut_cifrado}:
+    get:
+      tags:
+      - "perfil-controller"
+      summary: "Obtención del avatar de un cliente como imagen en bruto"
+      operationId: "obtenerAvatarUsingGET"
+      produces:
+      - "image/png"
+      - "image/jpeg"
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Token JWT"
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "idApp"
+        in: "header"
+        description: "Información de la APP, Formato: app_id|app_version|osiris_version"
+        required: true
+        type: "string"
+        x-exportParamName: "IdApp"
+      - name: "rut_cifrado"
+        in: "path"
+        description: "rut_cifrado"
+        required: true
+        type: "string"
+        x-exportParamName: "RutCifrado"
+      - name: "sucursal"
+        in: "header"
+        description: "Código de sucursal"
+        required: false
+        type: "string"
+        x-exportParamName: "Sucursal"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "Avatar encontrado"
+          schema:
+            type: "string"
+            format: "byte"
+        "204":
+          description: "Sin avatar"
+          schema:
+            type: "string"
+            format: "byte"
+        "400":
+          description: "Solicitud incorrecta"
+        "401":
+          description: "No autorizado"
+        "500":
+          description: "Error general"
+        "503":
+          description: "Servicio no disponible"
+      deprecated: false
+  /v1/productos/{codigos}:
+    get:
+      tags:
+      - "productos-controller"
+      summary: "Devuelve los productos del cliente"
+      operationId: "getProductosClienteUsingGET"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Token JWT"
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - name: "codigos"
+        in: "path"
+        description: "Lista de códigos de productos"
+        required: true
+        type: "string"
+        x-exportParamName: "Codigos"
+      - name: "idApp"
+        in: "header"
+        description: "Información de la APP, Formato: app_id|app_version|osiris_version"
+        required: true
+        type: "string"
+        x-exportParamName: "IdApp"
+      - name: "sucursal"
+        in: "header"
+        description: "Código de sucursal"
+        required: false
+        type: "string"
+        x-exportParamName: "Sucursal"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "Lista de productos del cliente"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ProductoResponse"
+        "400":
+          description: "Solicitud incorrecta"
+        "401":
+          description: "No autorizado"
+        "500":
+          description: "Error general"
+        "503":
+          description: "Servicio no disponible"
+      deprecated: false
+  /v1/utilidades/notificaciones/push/:
+    post:
+      tags:
+      - "push-controller"
+      summary: "Suscripción a push de mi pago"
+      operationId: "suscribirUsingPOST"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Authorization"
+        in: "header"
+        description: "Token JWT"
+        required: true
+        type: "string"
+        x-exportParamName: "Authorization"
+      - in: "body"
+        name: "device"
+        description: "device"
+        required: true
+        schema:
+          $ref: "#/definitions/PushDeviceTO"
+        x-exportParamName: "Device"
+      - name: "idApp"
+        in: "header"
+        description: "Información de la APP, Formato: app_id|app_version|osiris_version"
+        required: true
+        type: "string"
+        x-exportParamName: "IdApp"
+      - name: "sucursal"
+        in: "header"
+        description: "Código de sucursal"
+        required: false
+        type: "string"
+        x-exportParamName: "Sucursal"
+        x-optionalDataType: "String"
+      responses:
+        "200":
+          description: "OK"
+        "201":
+          description: "suscripción exitosa"
+        "400":
+          description: "Solicitud incorrecta"
+        "401":
+          description: "No autorizado"
+        "500":
+          description: "Error general"
+        "503":
+          description: "Servicio no disponible"
+      deprecated: false
+definitions:
+  AvatarTO:
+    type: "object"
+    required:
+    - "contentType"
+    - "image"
+    - "rut"
+    properties:
+      contentType:
+        type: "string"
+        description: "Content type asociado al avatar"
+      image:
+        type: "string"
+        description: "contenido del avatar en base64"
+      rut:
+        type: "string"
+        description: "rut asociado al avatar"
+    title: "AvatarTO"
+  Entry«string,string»:
+    type: "object"
+    properties:
+      key:
+        type: "string"
+      value:
+        type: "string"
+    title: "Entry«string,string»"
+    example:
+      value: "value"
+      key: "key"
+  PerfilTO:
+    type: "object"
+    required:
+    - "alias"
+    - "rut"
+    properties:
+      alias:
+        type: "string"
+        description: "alias asociado al usuario"
+      banca:
+        description: "Par código/texto con el banca"
+        $ref: "#/definitions/Entry«string,string»"
+      emailParticularCliente:
+        type: "string"
+        description: "Email del cliente"
+      marca:
+        description: "Par código/texto con el marca"
+        $ref: "#/definitions/Entry«string,string»"
+      nombre:
+        type: "string"
+        description: "nombre completo obtenido desde ficha"
+      rut:
+        type: "string"
+        description: "rut del cliente en formato 1236123-K"
+      segmento:
+        description: "Par código/texto con el segmento"
+        $ref: "#/definitions/Entry«string,string»"
+      sexo:
+        type: "string"
+        description: "Sexo del cliente"
+    title: "PerfilTO"
+    example:
+      rut: "rut"
+      marca:
+        value: "value"
+        key: "key"
+      segmento:
+        value: "value"
+        key: "key"
+      emailParticularCliente: "emailParticularCliente"
+      alias: "alias"
+      sexo: "sexo"
+      nombre: "nombre"
+      banca:
+        value: "value"
+        key: "key"
+  ProductoResponse:
+    type: "object"
+    properties:
+      claseCuenta:
+        type: "string"
+      codigoProducto:
+        type: "string"
+      descripcion:
+        type: "string"
+      email:
+        type: "string"
+      estado:
+        type: "string"
+      familia:
+        type: "string"
+      fechaInhibicion:
+        $ref: "#/definitions/XMLGregorianCalendar"
+      flagBloqueo:
+        type: "string"
+      flagInhibicion:
+        type: "string"
+      marca:
+        type: "string"
+      moneda:
+        type: "string"
+      numProducto:
+        type: "string"
+      numProductoEncriptado:
+        type: "string"
+        description: "Cuenta encriptada asociada al cliente"
+      redComercialTarjeta:
+        type: "string"
+      rowIdEmail:
+        type: "string"
+      rowIdProducto:
+        type: "string"
+      tipo:
+        type: "string"
+      tipoPersona:
+        type: "string"
+      tipoProducto:
+        type: "string"
+        enum:
+        - "CUENTA_VISTA"
+        - "CUENTA_AHORRO"
+        - "CUENTA_CORRIENTE"
+        - "TARJETA_CREDITO"
+        - "LINEA_CREDITO"
+        - "CREDITO_CONSUMO"
+        - "HIPOTECARIO"
+        - "DEFAULT"
+      tipoTarjeta:
+        type: "string"
+      titularidad:
+        type: "string"
+    title: "ProductoResponse"
+    example:
+      descripcion: "descripcion"
+      estado: "estado"
+      tipo: "tipo"
+      tipoPersona: "tipoPersona"
+      redComercialTarjeta: "redComercialTarjeta"
+      tipoTarjeta: "tipoTarjeta"
+      numProductoEncriptado: "numProductoEncriptado"
+      titularidad: "titularidad"
+      rowIdEmail: "rowIdEmail"
+      marca: "marca"
+      fechaInhibicion:
+        eon: 6
+        year: 4
+        fractionalSecond: 5.962133916683182377482808078639209270477294921875
+        timezone: 2
+        millisecond: 2
+        eonAndYear: 1
+        minute: 7
+        second: 3
+        valid: true
+        hour: 5
+        month: 9
+        day: 0
+        xmlschemaType:
+          localPart: "localPart"
+          prefix: "prefix"
+          namespaceURI: "namespaceURI"
+      rowIdProducto: "rowIdProducto"
+      tipoProducto: "CUENTA_VISTA"
+      flagInhibicion: "flagInhibicion"
+      numProducto: "numProducto"
+      moneda: "moneda"
+      codigoProducto: "codigoProducto"
+      flagBloqueo: "flagBloqueo"
+      claseCuenta: "claseCuenta"
+      email: "email"
+      familia: "familia"
+  PushDeviceTO:
+    type: "object"
+    required:
+    - "platform"
+    - "pushToken"
+    properties:
+      platform:
+        type: "string"
+        description: "identificador de plataforma: android (G), ios (A)"
+        enum:
+        - "A"
+        - "G"
+      pushToken:
+        type: "string"
+        description: "token de push FCM"
+    title: "PushDeviceTO"
+  QName:
+    type: "object"
+    properties:
+      localPart:
+        type: "string"
+      namespaceURI:
+        type: "string"
+      prefix:
+        type: "string"
+    title: "QName"
+    example:
+      localPart: "localPart"
+      prefix: "prefix"
+      namespaceURI: "namespaceURI"
+  XMLGregorianCalendar:
+    type: "object"
+    properties:
+      day:
+        type: "integer"
+        format: "int32"
+      eon:
+        type: "integer"
+      eonAndYear:
+        type: "integer"
+      fractionalSecond:
+        type: "number"
+      hour:
+        type: "integer"
+        format: "int32"
+      millisecond:
+        type: "integer"
+        format: "int32"
+      minute:
+        type: "integer"
+        format: "int32"
+      month:
+        type: "integer"
+        format: "int32"
+      second:
+        type: "integer"
+        format: "int32"
+      timezone:
+        type: "integer"
+        format: "int32"
+      valid:
+        type: "boolean"
+      xmlschemaType:
+        $ref: "#/definitions/QName"
+      year:
+        type: "integer"
+        format: "int32"
+    title: "XMLGregorianCalendar"
+    example:
+      eon: 6
+      year: 4
+      fractionalSecond: 5.962133916683182377482808078639209270477294921875
+      timezone: 2
+      millisecond: 2
+      eonAndYear: 1
+      minute: 7
+      second: 3
+      valid: true
+      hour: 5
+      month: 9
+      day: 0
+      xmlschemaType:
+        localPart: "localPart"
+        prefix: "prefix"
+        namespaceURI: "namespaceURI"
